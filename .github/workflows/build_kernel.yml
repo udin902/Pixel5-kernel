@@ -27,8 +27,8 @@ jobs:
         make redbull_defconfig
         make -j$(nproc)
     
-    - name: Upload Image
-      uses: actions/upload-artifact@v3
+    - name: Upload Kernel
+     uses: actions/upload-artifact@v4
       with:
-        name: boot-img
-        path: msm/arch/arm64/boot/Image.gz-dtb
+    name: kernel
+    path: path/to/Image.gz-dtb
