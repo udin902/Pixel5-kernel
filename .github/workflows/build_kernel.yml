@@ -1,1 +1,34 @@
 
+name: Build Pixel 5 Kernel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ARCH: arm64
+      CROSS_COMPILE: aarch64-linux-android-
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v3
+
+    - name: Setup NDK
+      uses: android-actions/setup-ndk@v2
+      with:
+        ndk-version: r25b
+
+    - name: Build kernel
+      run: |
+        export PATH=$HOME/android-ndk-r25b/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
+        export CC=aarch64-linux-android21-clang
+        cd msm
+        make redbull_defconfig
+        make -j$(nproc)
+    
+    - name: Upload Image
+      uses: actions/upload-artifact@v3
+      with:
+        name: boot-img
+        path: msm/arch/arm64/boot/Image.gz-dtb
